@@ -154,9 +154,9 @@ class CNN_MODEL(object):
         Y_p_ABC = np.array(Y_p_ABC)[0][0]
         Y_p_CDE = np.array(Y_p_CDE)[0][0]
 
-        all_acc = self.ABCDE.ACC
-        pre_acc = self.ABC.ACC
-        las_acc = self.CDE.ACC
+        all_acc = 5.0
+        pre_acc = 2.0
+        las_acc = 0.5
 
         Y_p = [0] * 5
         Y_p[0] = Y_p_ABCDE[0] * (all_acc/(all_acc + pre_acc)) + Y_p_ABC[0] * (pre_acc / (all_acc + pre_acc))
@@ -170,9 +170,13 @@ class CNN_MODEL(object):
         return Y_p
 
 
+#注意，图片必须是32 × 32的灰度图片
 
+
+'''
 MODEL = CNN_MODEL()
 
 img = Image.open('/home/ffb/Workspace/Python-srf/手写字识别/验证集/E/1081.jpg')
 
 print(MODEL.use_model(img))
+'''
