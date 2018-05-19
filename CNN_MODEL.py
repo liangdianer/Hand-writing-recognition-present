@@ -25,7 +25,7 @@ class CNN_MODEL_ABCDE(object):
                 saver.restore(self.sess, cf.MODEL_PATH + 'CNN.model-ABCDE')
 
         self.x_input = self.graph.get_tensor_by_name('X_input:0')
-        self.y_p = self.graph.get_tensor_by_name('Y_p:0')
+        self.before_softmax = self.graph.get_tensor_by_name('before_softmax:0')
 
 
     def use_model(self, img):
@@ -37,7 +37,7 @@ class CNN_MODEL_ABCDE(object):
 
         X = [x]
 
-        Y_p = self.sess.run([self.y_p], feed_dict={self.x_input:X})
+        Y_p = self.sess.run([self.before_softmax], feed_dict={self.x_input:X})
         
         Y_p = np.array(Y_p)[0][0]
         return Y_p
@@ -66,7 +66,7 @@ class CNN_MODEL_ABC(object):
                 saver.restore(self.sess, cf.MODEL_PATH + 'CNN.model-ABC')
 
         self.x_input = self.graph.get_tensor_by_name('X_input:0')
-        self.y_p = self.graph.get_tensor_by_name('Y_p:0')
+        self.before_softmax = self.graph.get_tensor_by_name('before_softmax:0')
 
 
     def use_model(self, img):
@@ -78,7 +78,7 @@ class CNN_MODEL_ABC(object):
 
         X = [x]
 
-        Y_p = self.sess.run([self.y_p], feed_dict={self.x_input:X})
+        Y_p = self.sess.run([self.before_softmax], feed_dict={self.x_input:X})
         
         Y_p = np.array(Y_p)[0][0]
         return Y_p
@@ -107,7 +107,7 @@ class CNN_MODEL_CDE(object):
                 saver.restore(self.sess, cf.MODEL_PATH + 'CNN.model-CDE')
 
         self.x_input = self.graph.get_tensor_by_name('X_input:0')
-        self.y_p = self.graph.get_tensor_by_name('Y_p:0')
+        self.before_softmax = self.graph.get_tensor_by_name('before_softmax:0')
 
 
     def use_model(self, img):
@@ -119,7 +119,7 @@ class CNN_MODEL_CDE(object):
 
         X = [x]
 
-        Y_p = self.sess.run([self.y_p], feed_dict={self.x_input:X})
+        Y_p = self.sess.run([self.before_softmax], feed_dict={self.x_input:X})
         
         Y_p = np.array(Y_p)[0][0]
         return Y_p
@@ -146,17 +146,17 @@ class CNN_MODEL(object):
 
         X = [x]
 
-        Y_p_ABCDE = self.ABCDE.sess.run([self.ABCDE.y_p], feed_dict={self.ABCDE.x_input:X})
-        Y_p_ABC = self.ABC.sess.run([self.ABC.y_p], feed_dict={self.ABC.x_input:X})
-        Y_p_CDE = self.CDE.sess.run([self.CDE.y_p], feed_dict={self.CDE.x_input:X})
+        Y_p_ABCDE = self.ABCDE.sess.run([self.ABCDE.before_softmax], feed_dict={self.ABCDE.x_input:X})
+        Y_p_ABC = self.ABC.sess.run([self.ABC.before_softmax], feed_dict={self.ABC.x_input:X})
+        Y_p_CDE = self.CDE.sess.run([self.CDE.before_softmax], feed_dict={self.CDE.x_input:X})
         
         Y_p_ABCDE = np.array(Y_p_ABCDE)[0][0]
         Y_p_ABC = np.array(Y_p_ABC)[0][0]
         Y_p_CDE = np.array(Y_p_CDE)[0][0]
 
-        all_acc = 5.0
-        pre_acc = 2.0
-        las_acc = 0.5
+        all_acc = self.ABCDE.ACC
+        pre_acc = self.ABC.ACC
+        las_acc = self.CDE.ACC
 
         Y_p = [0] * 5
         Y_p[0] = Y_p_ABCDE[0] * (all_acc/(all_acc + pre_acc)) + Y_p_ABC[0] * (pre_acc / (all_acc + pre_acc))
@@ -174,7 +174,7 @@ class CNN_MODEL(object):
 
 
 '''
-MODEL = CNN_MODEL()
+MODEL = CNN_MODEL_CDE()
 
 img = Image.open('/home/ffb/Workspace/Python-srf/手写字识别/验证集/E/1081.jpg')
 

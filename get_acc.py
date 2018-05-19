@@ -31,11 +31,11 @@ def get_test_data():
                 if poi == k:
                     true = true + 1
                 else:
-                    '''
+                    
                     img.show()
                     print(Y_p)
                     print(k)
-                    '''
+                    
                     pass
 
     return true / summ
